@@ -1,0 +1,108 @@
+przestrzen stanów - obejmuje:
+			--zbiór stanów 			|ponad 10B
+			--zbiór operatorów(akcji)	|4 akcje(operujemy polem pustym)(nie zawsze wszystkie dostępne)
+			--model przejścia
+
+problem - obejmuje:
+			--przestrzeń stanów
+			--stan początkowy
+			--stan docelowy (ew. zbiór stanów docelowych)
+			--test (sprawdzenie czy stan aktualny jest docelowym)
+			--jednostkowe koszty przejścia (funkcja stan i operator wychodzi koszt)(u nas koszt zawsze taki sam)
+
+ścieżka - ciąg stanów powiązanych dopuszczalnymi operatorami
+	-> koszt ścieżki (suma jednostkowych kosztów przejść)
+
+rozwiązanie - ciąg operatorów które trzeba zastosować żeby od stanu początkowego do stanu docelowego
+	-> rozwiązania optymalne (generują ścieżki o najmnieszyjm koszcie ścieżki(nie ma lepszego))(może być ich wiele)
+
+graf - struktura matematyczna, która obejmuje dwa zbiory (v-wierzchołki/węzły(vertex))(e-krawędzie(edges))
+	-nieskierowane(ruch wzdłóż krawędzi dowolny)
+	-skierowane (ruch wzdłóż danej krawędzi tylko w określonym kieunku)
+	-etykiety
+
+graf skierowany etykietowany(wierzchołki-stany(całej układanki), krawędzie-operatory), każda krawędź powielona(L/R,U/D)
+
+reprezentacje grafów:
+	-jawne (wszystko na raz dostępne): definicyjna, macierz sąsiedztwa, lista sąsiedztwa, 
+	-niejawne (informcje nie śa dostępne w całości)-> funkcja (przyjmuje stan i zwraca stany sąsiednie)
+
+przestrzeń poszukiwań - przestrzeń stanów problemu
+
+przeszukanie grafu - od początku do końca
+przejście po garfie- cały graf
+
+strategie
+	-kompletne - zawsze znajdzie rozwiązanie
+		- optymalne - gwarantują znalezienie najbardziej optymalne
+	-niekompletne - nie gwarantuja znalezienia rozwiązania
+
+złożoność obliczeniowa
+	-czasowa - liczba operacji 
+	-pamięciowa - ile pamięci
+
+strategie przeszukiwania
+	-ślepe(uninformed/blind/undirected/bruteforce) - przeszukują systematycznie, nie zgadują 
+		- wszerz(BFS), w głąb (DFS)(- z ograniczeniem (DLS), -z iteracyjnym powielaniem(IDS))
+		- bezkosztowe
+	-heurystyczne(informed/directed) - próbują zgadnąć gdzie jest największa szansa rozwiązania
+		-A*(a-star) (- z iteracyjnym pogłębianiem (IDA*)
+		-wiązką (binsearch)
+
+------------------------------------------------------------------------------------------------
+zadanie:
+wszerz
+w głąb z igraniczeniem
+A*
+
+
+
+---------------------------------------------wszerz---------------------------------------------
+lista stanów otwartych (openlist):sąsiedzi niesprawdzeni			|kolejka     Q
+lista stanów zamkniętych(closedlist):sprawdzone stany, które nie są końcowe	|set/hashmap T
+lista stnów osiągniętych (otwarte+zamknięte)					|set	     U
+
+
+algorytm(graf(G), stan początkowy(s)):
+	if G.isGood(s)
+		return success
+	Q=queue()
+	U=set()
+	Q.enqueue(s)
+	U.add(s) 
+	while ~Q.isempty()
+		v=q.dequeue()
+		for n in G.neighbours(v)
+			if ~U.has(n)
+				if G.isGood(n)
+					return success
+				Q.enqueue(n)
+				U.add(n)
+			
+	return failure
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
