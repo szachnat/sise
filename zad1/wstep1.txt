@@ -70,7 +70,7 @@ algorytm(graf(G), stan początkowy(s)):
 	U=set()
 	Q.enqueue(s)
 	U.add(s) 
-	while ~Q.isempty()
+	while ~Q.isEmpty()
 		v=q.dequeue()
 		for n in G.neighbours(v)
 			if ~U.has(n)
@@ -80,6 +80,59 @@ algorytm(graf(G), stan początkowy(s)):
 				U.add(n)
 			
 	return failure
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+---------------------------------------------wgłąb( bez ograniczenia)----------------------------
+rekurencja
+lista stanów zamkniętych(globalna, bo rekurencja każda musi mieć dostęp)	|set	T
+
+T=set()
+function dfs(graf(G),stan(v),set(T)):
+	if G.isGood(v)
+		return success
+	T.add(v)
+	for n in G.neighbours(v)
+		if ~T.has(n)
+			 if dfs(G,n,T)==success
+				return success
+	return failure
+
+!WAŻNA kolejność sąsiadów 
+
+-----------------------------------------alternatywnie wgłąb(iteracja)(unikać bo kolejność sąsiadów)-------------------------
++lista stanów otwartych	STOS							|stos	S
+
+function dfs(G,s)
+	S=stack()
+	T=set()
+	S.push(s)
+	while S.isEmpty()
+		v=S.pop()
+		if ~T.has(v)
+			if G.isGood(v)
+				return success
+			T.add(v)
+			for n in reverse(G.neighbours(v))		|jeśli chcemy zachować kolejność sąsiadów to wrzucamy na liste stanów otwartych w odwrotnej kolejności 
+				if ~T.has(n)				|może warunku nie być, oststecznie nie ma wpływu
+					S.push(n)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
