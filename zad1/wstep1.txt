@@ -57,7 +57,7 @@ A*
 
 
 
----------------------------------------------wszerz---------------------------------------------
+---------------------------------------------wszerz BFS---------------------------------------------
 lista stanów otwartych (openlist):sąsiedzi niesprawdzeni			|kolejka     Q
 lista stanów zamkniętych(closedlist):sprawdzone stany, które nie są końcowe	|set/hashmap T
 lista stnów osiągniętych (otwarte+zamknięte)					|set	     U
@@ -122,15 +122,75 @@ function dfs(G,s)
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+HEURYSTYKA
+musi być dopuszczalna - czyli szacowany koszt ścieżki musi być dokładny jak koszt lub mnieszy(od stanu początkowego do docelowego)(ma prawo TYLKO niedoszacować)
+musi być spójna - monotoniczność
 
+DO IMPLEMENTACJI
+-ile bloczków w dobrych miejscach (Hamminga) - dobty (0), zły(1)					|POMIJAMY BLOK 0
+-odległość od swojego miejsca (Manhattan) - dobry (0), zły(odległość(każda oś osobno i sumujemy))	|
 
+f(node)=g(node)(dotychczasowy koszt)+h(node)(szacowany koszt)
 
+------------------------------------------A*(heurystyka)--------------------------------------------------------------------
 
+function astar(G,s)
+	P=priority_queue()
+	T=set()
+	P.insert(s,0)   -> z priorytetem 0(bo nie ma sesnu liczyc, jest sam i zaraz ściągamy)
+	while ~P.isEmpty()
+		v=p.pull()
+		if G.isGood(v)
+			return success
+		T.add(v)
+		for n in G.neighbours(v)
+			if ~T.has(n)
+				f=g(n)+h(n,G)
+				if ~P.has(n)
+					P.insert(n,f)
+				else 
+					if P.priority(n) >f
+						p.update(n,f)
+	return false
 
+-----------------------------------------------alternative(bez update)(lepiej?)-------------------------------------------------------------
+function astar(G,s)
+	P=priority_queue()
+	T=set()
+	P.insert(s,0)   -> z priorytetem 0(bo nie ma sesnu liczyc, jest sam i zaraz ściągamy)
+	while ~P.isEmpty()
+		v=p.pull()
+		if ~T.has(v)
+			if G.isGood(v)
+				return success
+			T.add(v)
+			for n in G.neighbours(v)
+				if ~T.has(n)
+					f=g(n)+h(n,G)
+					P.insert(n,f)
+--------------------------------------------------------------------------------------------------------------------------------------
+STRUKTURY DANYCH
+	BFS (wszerz) 	- FIFO			-lista dwustronna (NIE dwukierunkowa) deque (Python: collections:deque)
+	DFS (w głąb) 	- LIFO			-stack (Python: list(wbudowany))
+	A* 	     	- Priority queue	-heap (Python: funkcja z modułu heapq (tworzenie listy i konwersja)
 
+			- lista st. zamkniętych 	(python: set(wbudowany)/dict(wbudowany dla mapy))
 
+	układanka    	- tablica 2wym
+			- tablica 1wym
+			- (0)[1,1]  -> ([1,2]
+			  (1)[0,0]      [3,0])
+			  (2)[0,1]
+			  (3)[1,0]
+			- struktra: składa sie z tablicy 2wym i pozycji0
 
-
+			- odniesienie/referencja do rodzica i jaki operator został użyty od rodzica	|aby podać rozwiązanie	| 
+			- koszt dotychczasowy(rodzica+1) (opcjonalnie)				   	|   			|
+													- node (stan, ref do rodzica, operator zastosowany na rodzicu) hashset(hashowanie
+														tylko stanu, bo wszytko sie nie powtarza a stan tak) (def __hash__(self)
+																				      def __eq__(self))
+														dopiero po funkcjach używamy set lub dict(Python)(lista stanów zamkniętych)
+													- tab asocjacyjna (klucz -stan, wartość - struct (rodzic, operator)) hashmap
 
 
 
