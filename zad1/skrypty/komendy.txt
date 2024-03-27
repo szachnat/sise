@@ -1,0 +1,8 @@
+as admin
+runprog
+	.\runprog.ps1
+	.\runprog.ps1 bfs (RDUL/RDLU/DRUL/DRLU/LUDR/LURD/ULDR/ULRD)
+	.\runprog.ps1 dfs (RDUL/RDLU/DRUL/DRLU/LUDR/LURD/ULDR/ULRD)
+	.\runprog.ps1 astr (hamm/manh)
+runval
+ 	.\runval.ps1
