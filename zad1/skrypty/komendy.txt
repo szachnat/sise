@@ -1,4 +1,5 @@
 as admin
+cd C:\_Natalia\__studia\4\sise\zad1\_testy
 runprog
 	.\runprog.ps1
 	.\runprog.ps1 bfs (RDUL/RDLU/DRUL/DRLU/LUDR/LURD/ULDR/ULRD)

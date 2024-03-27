@@ -23,7 +23,7 @@
 
 param([string]$strategy, [string]$param)
 
-$Progcmd = 'python C:\_Natalia\__studia\4\_pomoce\sise\src\main.py'
+$Progcmd = 'python C:\_Natalia\__studia\4\sise\zad1\src\main.py'
 $Orders = @('RDUL', 'RDLU', 'DRUL', 'DRLU', 'LUDR',  'LURD', 'ULDR', 'ULRD')
 $Heuristics = @('hamm', 'manh')
 $InitFilenameRegex = '^[a-zA-Z0-9]+_[0-9]+_[0-9]+.txt$'
