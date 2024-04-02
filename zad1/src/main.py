@@ -4,6 +4,7 @@ import time
 from Lib.state import state, StateError
 from Lib.graph import graph_node
 from Lib.bfs import BFS
+from Lib.dfs import DFS
 
 def text_split(text:list[list[str]]):
     text=text.split('\n')
@@ -67,6 +68,17 @@ def do_bfs(box:list[list[int]], rows:int, columns:int, mode:str):
     total_time = time.time() - start_time
     return result, total_time
 #####################################################################################################
+def do_dfs(box:list[list[int]], rows:int, columns:int, mode:str):
+    dfs = DFS()
+    start_node = graph_node(state(rows, columns, box, mode), None, None)
+
+    # DFS
+    # max_depth >= 20 powinno być
+    start_time = time.time()
+    result = dfs.get_result(start_node)
+    total_time = time.time() - start_time
+    return result, total_time
+#####################################################################################################
 def main(type: str, mode: str, start_filename: str, result_filename: str, info_filename: str):
 
     with open(start_filename, 'r') as f:
@@ -77,8 +89,10 @@ def main(type: str, mode: str, start_filename: str, result_filename: str, info_f
     try:
         if type == 'bfs':
             (end_node, visited_num, closed_num, reached_depth), total_time = do_bfs(box, rows, columns, mode)
-        #elif type == 'dfs':
-        #    (end_node, visited_num, closed_num, reached_depth), total_time = do_dfs(box, rows, columns, mode)
+        elif type == 'dfs':
+            (end_node, visited_num, closed_num, reached_depth), total_time = do_dfs(box, rows, columns, mode)
+            if (end_node == None):
+                print(start_filename)
         #elif type == 'astr':
         #    (end_node, visited_num, closed_num, reached_depth), total_time = do_astar(box, rows, columns, mode)
         else:

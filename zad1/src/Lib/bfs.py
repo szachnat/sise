@@ -1,6 +1,5 @@
 from collections import deque
 
-from Lib.state import state, StateError
 from Lib.graph import graph_node
 
 class BFS:
@@ -11,7 +10,7 @@ class BFS:
         
         # potrzebne później w pliku z info
         visited_num = 0
-        colosed_num = 0
+        closed_num = 0
         reached_depth = 0
 
         #listy stanów
@@ -24,15 +23,18 @@ class BFS:
 
         while not len(openlist) == 0:
             v, current_depth = openlist.popleft()
+
             if current_depth > reached_depth:
                 reached_depth = current_depth
-            colosed_num += 1
+
+            closed_num += 1
+            
             for n in v.neighbours():
                 if not n in visitedlist:
                     if (n.state.isGood() == True):
-                        return n, visited_num, colosed_num, reached_depth
+                        return n, visited_num, closed_num, reached_depth
                     openlist.append((n,current_depth + 1))
                     visitedlist.add(n)
                     visited_num += 1
-        return None, visited_num, colosed_num, reached_depth
+        return None, visited_num, closed_num, reached_depth
 
