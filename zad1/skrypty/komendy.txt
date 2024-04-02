@@ -1,5 +1,6 @@
 as admin
 cd C:\_Natalia\__studia\4\sise\zad1\_testy
+$env:JAVA_HOME='C:\Program Files\Java\jre-1.8'
 runprog
 	.\runprog.ps1
 	.\runprog.ps1 bfs (RDUL/RDLU/DRUL/DRLU/LUDR/LURD/ULDR/ULRD)
