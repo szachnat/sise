@@ -36,5 +36,6 @@ class BFS:
                     openlist.append((n,current_depth + 1))
                     visitedlist.add(n)
                     visited_num += 1
+        print('false')
         return None, visited_num, closed_num, reached_depth
 

@@ -5,6 +5,7 @@ from Lib.state import state, StateError
 from Lib.graph import graph_node
 from Lib.bfs import BFS
 from Lib.dfs import DFS
+from Lib.astar import ASTAR
 
 def text_split(text:list[list[str]]):
     text=text.split('\n')
@@ -79,6 +80,30 @@ def do_dfs(box:list[list[int]], rows:int, columns:int, mode:str):
     total_time = time.time() - start_time
     return result, total_time
 #####################################################################################################
+def do_astar(box:list[list[int]], rows:int, columns:int, mode:str):
+    astar = ASTAR()
+    start_node = graph_node(state(rows, columns, box, 'RDUL'),None, None)
+
+    # goal
+    goal_matrix = []
+    for w in range(rows):
+        goal_matrix.append([])
+        for k in range(columns):
+            if w == rows - 1 and k == columns - 1:
+                goal_matrix[w].append(0)
+            else:
+                goal_matrix[w].append(w*columns + k + 1)
+    goal_state = state(rows, columns, goal_matrix, 'RDUL')
+
+    if (mode != 'hamm' and mode != 'manh'):
+        print(f"Podana heurystyka '{mode}' nie została zaimplementowana.\nDostępne: 'manh' oraz 'hamm'.")
+        return None
+    
+    start_time = time.time()
+    result = astar.get_result(start_node, goal_state, mode)
+    total_time = time.time() - start_time
+    return result, total_time
+#####################################################################################################
 def main(type: str, mode: str, start_filename: str, result_filename: str, info_filename: str):
 
     with open(start_filename, 'r') as f:
@@ -93,8 +118,9 @@ def main(type: str, mode: str, start_filename: str, result_filename: str, info_f
             (end_node, visited_num, closed_num, reached_depth), total_time = do_dfs(box, rows, columns, mode)
             if (end_node == None):
                 print(start_filename)
-        #elif type == 'astr':
-        #    (end_node, visited_num, closed_num, reached_depth), total_time = do_astar(box, rows, columns, mode)
+        elif type == 'astr':
+            #do_astar(box, rows, columns, mode)
+            (end_node, visited_num, closed_num, reached_depth), total_time = do_astar(box, rows, columns, mode)
         else:
             print(f"Nie została zaimplementowana metoda o podanym akronimie '{type}'.\nDostępne to: 'bfs', 'dfs' oraz 'astr'")
             return

@@ -13,7 +13,7 @@ class DFS:
         reached_depth = 0
 
         openlist = []           #S
-        closed = set()          #T
+        #closed = set()          #T
 
         openlist.append((node, 0))
         visited_num += 1
