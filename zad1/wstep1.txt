@@ -194,6 +194,14 @@ STRUKTURY DANYCH
 
 
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+nazwy zmiennych - żeby było wiadomo o co chodzi
+
+NIE DOŁĄCZAĆ KODU GENERUJACEGO WYKRESY
+dla czasu -> hednostki na wykresie
+sortować kryteriami a nie algorytmami
+
+
 
 
 

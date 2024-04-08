@@ -31,11 +31,12 @@ class BFS:
             
             for n in v.neighbours():
                 if not n in visitedlist:
-                    if (n.state.isGood() == True):
-                        return n, visited_num, closed_num, reached_depth
-                    openlist.append((n,current_depth + 1))
                     visitedlist.add(n)
                     visited_num += 1
+                    if (n.state.isGood() == True):
+                        return n, visited_num, closed_num, reached_depth+1
+                    openlist.append((n,current_depth + 1))
+                    
         print('false')
         return None, visited_num, closed_num, reached_depth
 

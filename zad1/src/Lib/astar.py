@@ -44,11 +44,11 @@ class ASTAR:
         
         # potrzebne później w pliku z info
         visited_num = 0
-        compiled_num = 0
+        closed_num = 0
         reached_depth = 0
 
         priority = PriorityQueue()
-        T=set()
+        closedlist=set()
         priority.put((node, 0, 0), 0)
         visited_num += 1
 
@@ -59,24 +59,23 @@ class ASTAR:
             if current_depth > reached_depth:
                 reached_depth = current_depth
 
-            compiled_num += 1
+            if not (v in closedlist):
 
-            if not (v in T):
-                #print('v not in T')
+                closedlist.add(v)
+                closed_num += 1
+
                 if v.state.isGood():
-                    return v, visited_num, compiled_num, reached_depth
+                    return v, visited_num, closed_num, reached_depth
                 
-                T.add(v)
-
                 for n in v.neighbours():
-                    if not (n in T):
+                    if not (n in closedlist):
                         visited_num += 1
                         n_g = current_g + heuristic(node.state, n.state)
                         n_h = heuristic(n.state, goal)
                         f = n_g + n_h
                         priority.put((n, n_g, current_depth + 1), f)
         print('false')
-        return None, visited_num, compiled_num, reached_depth
+        return None, visited_num, closed_num, reached_depth
     #####################################################################################################
     def hamming_heuristic(self, s1: state, s2: state) -> int:
         if s1.rows != s2.rows:

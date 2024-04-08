@@ -8,3 +8,5 @@ runprog
 	.\runprog.ps1 astr (hamm/manh)
 runval
  	.\runval.ps1
+exdata
+	.\exdata.ps1

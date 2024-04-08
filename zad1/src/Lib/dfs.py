@@ -13,40 +13,33 @@ class DFS:
         reached_depth = 0
 
         openlist = []           #S
-        #closed = set()          #T
+        closed = dict()#set()          #T
 
         openlist.append((node, 0))
         visited_num += 1
 
-        #text = 'a'
-
         while not len(openlist) == 0:
             v, current_depth = openlist.pop()
-
-            #text += "d" + str(current_depth) + " "
-            #if (v.operator != None):
-            #    text += str(v.operator) + "\n"
-            #text += str(v.state.toStr_state()) + '\n'
             
             if current_depth > reached_depth:
                 reached_depth = current_depth
 
-            #if not v in closed: #caly if powinien byc wciety - do pomocniczego print
-            if (v.state.isGood() == True):
-                    return v, visited_num, closed_num, reached_depth
-                
-            #closed.add(v)
-            closed_num +=1
+            if not v in closed: 
+                if (v.state.isGood() == True):
+                        return v, visited_num, closed_num, reached_depth
+                    
+                closed[v]=current_depth
+                closed_num +=1
 
-            if current_depth < 21:#max_depth:
-                    for n in reversed(v.neighbours()):
-                        #if not n in closed:
+                if current_depth < 21:
+                        for n in reversed(v.neighbours()):
                             openlist.append((n, current_depth + 1))
                             visited_num += 1
-                    #text += "\n"+"generowani sasiediz"+"\n"
-                #else:
-                    #text += "\n"+"nawrot"+"\n"
-        #with open('.\pom.txt', 'w') as f:
-        #    f.write(text)
+            else:
+                if (closed.get(v) > current_depth):
+                     openlist.append((v,current_depth))
+                     closed.pop(v)
+                     closed_num -= 1
+
         print('false')
         return None, visited_num, closed_num, reached_depth
