@@ -5,7 +5,7 @@ runprog
 	.\runprog.ps1
 	.\runprog.ps1 bfs (RDUL/RDLU/DRUL/DRLU/LUDR/LURD/ULDR/ULRD)
 	.\runprog.ps1 dfs (RDUL/RDLU/DRUL/DRLU/LUDR/LURD/ULDR/ULRD)
-	.\runprog.ps1 astr (hamm/manh)
+	.\runprog.ps1 astr
 runval
  	.\runval.ps1
 exdata
