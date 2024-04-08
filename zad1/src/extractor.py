@@ -111,7 +111,7 @@ def max_stats(statsList: list[Stats]) -> Stats:
                 max_time = stat.time
             if stat.maxDepth > max_maxDepth:
                 max_maxDepth = stat.maxDepth
-
+    print("-",max_visited)
     max_stats = Stats(0, "", "", max_length, max_visited, max_computed, max_time, max_maxDepth)
     return max_stats
 
@@ -189,6 +189,11 @@ def groupedBarChart(groups: dict[object, dict[object, Stats]], title: str, yLabe
     ax.set_ylabel(yLabel)
     ax.set_xlabel(xLabel)
     ax.set_title(title)
+    box = ax.get_position()
+    ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+ 
+   
 
     plt.savefig(filepath, bbox_inches='tight', dpi=100)
     #plt.show()
@@ -268,7 +273,7 @@ def main():
         groupedBarChart(avg_length[t], type, "Średnia długość rozwiązania", "Odległość", join(wykresyPath, f"{t.lower()}_długość.png"))
         groupedBarChart(avg_visited[t], type, "Średnia liczba stanów odwiedzonych", "Odległość", join(wykresyPath, f"{t.lower()}_odwiedzone.png"))
         groupedBarChart(avg_computed[t], type, "Średnia liczba stanów przetworzonych", "Odległość", join(wykresyPath, f"{t.lower()}_przetworzone.png"))
-        groupedBarChart(avg_time[t], type, "Średni czas rozwiązywania (ms)", "Odległość", join(wykresyPath, f"{t.lower()}_czas.png"))
+        groupedBarChart(avg_time[t], type, "Średni czas rozwiązywania (s)", "Odległość", join(wykresyPath, f"{t.lower()}_czas.png"))
         groupedBarChart(avg_maxDepth[t], type, "Średnia maksymalna głębokość rekursji", "Odległość", join(wykresyPath, f"{t.lower()}_rekursja.png"))
 
 
