@@ -55,6 +55,7 @@ def group_by_stats(statsList: list[Stats], attrName: str) -> dict[object, list[S
             group = []
         group.append(stats)
         groups[groupName] = group
+    #groups['all'] = group
     return groups
 
 def condition_stats(statsList: list[Stats], attrName: str, condition: Callable[[object], bool]) -> list[Stats]:
@@ -243,8 +244,6 @@ def main():
         all_stats.append(Stats(distance, type, parameter, length, visited, computed, time, maxDepth))
 
     avg_res = group_by_stats(all_stats, 'type')
-    # min_res = deepcopy(avg_res)
-    # max_res = deepcopy(avg_res)
     for t in avg_res.keys():
         avg_res[t] = group_by_stats(avg_res[t], 'distance')
         for d in avg_res[t].keys():
@@ -259,6 +258,12 @@ def main():
                 avg_res[t][d][p] = avarage_stats(avg_res[t][d][p])
                 new_params[new_p] = avg_res[t][d][p]
             avg_res[t][d] = new_params
+            #print(avg_res[t][d])
+
+    #avg_res1=all_stats
+    #avg_res1 = group_by_stats(all_stats, 'type')
+    
+    #print(avg_res)
 
     avg_length = get_only_one_attr(avg_res, 'length')
     avg_visited = get_only_one_attr(avg_res, 'visited')
@@ -276,6 +281,34 @@ def main():
         groupedBarChart(avg_time[t], type, "Średni czas rozwiązywania (s)", "Odległość", join(wykresyPath, f"{t.lower()}_czas.png"))
         groupedBarChart(avg_maxDepth[t], type, "Średnia maksymalna głębokość rekursji", "Odległość", join(wykresyPath, f"{t.lower()}_rekursja.png"))
 
+    avg_res2 = dict()
+    avg_res2['ogółem']= all_stats
+
+    for t in avg_res2.keys():
+        avg_res2[t] = group_by_stats(avg_res2[t], 'distance')
+        for d in avg_res2[t].keys():
+            avg_res2[t][d] = group_by_stats(avg_res2[t][d], 'type')
+            new_params = {}
+            for p in avg_res2[t][d].keys():
+                new_p = p.upper()
+                avg_res2[t][d][p] = avarage_stats(avg_res2[t][d][p])
+                new_params[new_p] = avg_res2[t][d][p]
+            avg_res2[t][d] = new_params
+            #print(avg_res[t][d])
+    #print(avg_res2)
+    avg_length = get_only_one_attr(avg_res2, 'length')
+    avg_visited = get_only_one_attr(avg_res2, 'visited')
+    avg_computed = get_only_one_attr(avg_res2, 'computed')
+    avg_time = get_only_one_attr(avg_res2, 'time')
+    avg_maxDepth = get_only_one_attr(avg_res2, 'maxDepth')
+
+    for t in avg_res2.keys():
+        type = t.upper()
+        groupedBarChart(avg_length[t], type, "Średnia długość rozwiązania", "Odległość", join(wykresyPath, f"{t.lower()}_długość.png"))
+        groupedBarChart(avg_visited[t], type, "Średnia liczba stanów odwiedzonych", "Odległość", join(wykresyPath, f"{t.lower()}_odwiedzone.png"))
+        groupedBarChart(avg_computed[t], type, "Średnia liczba stanów przetworzonych", "Odległość", join(wykresyPath, f"{t.lower()}_przetworzone.png"))
+        groupedBarChart(avg_time[t], type, "Średni czas rozwiązywania (s)", "Odległość", join(wykresyPath, f"{t.lower()}_czas.png"))
+        groupedBarChart(avg_maxDepth[t], type, "Średnia maksymalna głębokość rekursji", "Odległość", join(wykresyPath, f"{t.lower()}_rekursja.png"))
 
     # found_dist_res = group_by_stats(all_stats, 'type')
     # found_param_res = deepcopy(found_dist_res)
