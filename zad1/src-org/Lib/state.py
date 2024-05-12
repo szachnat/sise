@@ -91,7 +91,7 @@ class state:
     def isGood(self):
         for x in range(self.rows):
             for y in range(self.columns):
-                if (self.box[x][y] != (x*4+y+1) and self.box[x][y] != 0):
+                if (self.box[x][y] != (x*self.rows+y+1) and self.box[x][y] != 0):
                     return False
         return True
     #####################################################################################################
