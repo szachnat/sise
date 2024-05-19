@@ -19,12 +19,14 @@ def test_layer_MLP():
     z= Layer(2, 3, sigmoidal_function, derivative_of_sigmoidal_function)
     #Layer.print(z)
 
-    print('a')
-    a=MLP([2, 3])
+    #print('a')
+    a=MLP([2])
     MLP.print(a)
-    print("b")
-    b=MLP([2,3,2])
-    MLP.print(b)
+    a.learn([1,2],[1,2])
+    MLP.print(a)
+    #print("b")
+    #b=MLP([2,3,2])
+    #MLP.print(b)
 
 if __name__ == "__main__":
     main()
