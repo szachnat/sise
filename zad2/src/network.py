@@ -119,9 +119,9 @@ class MLP:
         network_outputs=self.test(inputs)
         #print('wyjsciesieci=',network_outputs)
         errors=[correct_outputs - network_outputs for correct_outputs, network_outputs in zip(correct_outputs, network_outputs)]
-        print("bledy=",errors)
+        #print("bledy=",errors)
         for layer in reversed(self.layers[1:]):
             errors=layer.learn(errors, learn_speed, momentum)
-            print("bledy=",errors)
+            #print("bledy=",errors)
         self.layers[0].learn(errors, learn_speed, momentum, False)
-        print("bledy=",errors)
+        #print("bledy=",errors)
