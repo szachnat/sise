@@ -31,12 +31,14 @@ class Layer:
         self.weights=[[random() for i in range(inputs)] for j in range(number_of_neurons)]
         self.bias=[0 for i in range(number_of_neurons)]
         self.number_of_inputs=int(inputs)
+        self.gradients = [[0 for _ in range(inputs)] for _ in range(number_of_neurons)]
     ############################################################################################
     def print(self):
         print(self.weights)
         print(self.bias)
     ############################################################################################
     def test(self,inputs):
+        self.inputs=inputs
         sum = 0
         self.outputs=[]
         for j in range(len(self.weights)):
@@ -52,24 +54,46 @@ class Layer:
             #print('suma=',sum)
             self.outputs.append(self.activation_function(sum))
             #print('aktyvation=',self.activation_function(sum))
-        print('outputs=',self.outputs)
+        #print('outputs=',self.outputs)
         return self.outputs
     ############################################################################################
     def learn(self,errors,learn_speed, momentum, calculate_errors=True):
+        # calculate error
         errors_out=[]
         if(calculate_errors):
             for i in range(self.number_of_inputs):
                 error_for_input=0
                 for j in range(len(self.weights)):
                     error_to_propagate=errors[j]
-                    print('error to propagate=',error_to_propagate)
+                    #print('error to propagate=',error_to_propagate)
                     weight=self.weights[j][i]
-                    print('weight=',weight)
-                    print('last output=',self.outputs[j])
+                    #print('weight=',weight)
+                    #print('last output=',self.outputs[j])
                     error_for_input+=error_to_propagate*weight*self.derivative_of_activation_function(self.outputs[j])
                 errors_out.append(error_for_input)
-                print("error on input=",error_for_input)
-
+                #print("error on input=",error_for_input)
+        # calculate gradient
+        gradients = []
+        for activation, error, old_gradient in zip(self.outputs, errors, self.gradients):
+            factor = -error * self.derivative_of_activation_function(activation)
+            gradients.append([factor * x + momentum * g for x, g in zip(self.inputs, old_gradient)])
+        self.gradients = gradients
+        # calculate new weights
+        new_weights = []
+        for weight, gradient in zip(self.weights, self.gradients):
+            new_weights.append([w - learn_speed * g for w, g in zip(weight, gradient)])
+            #new_weight=0
+            #for w, g in zip(weight, gradient):
+            #    new_weight+=w - learn_speed * g
+            #new_weights.append(new_weight)
+        self.weights = new_weights
+        #calculate new bias
+        new_biases = []
+        for bias, activation, error in zip(self.bias, self.outputs, errors):
+            factor = -error * self.derivative_of_activation_function(activation)
+            new_bias = bias - learn_speed * factor
+            new_biases.append(new_bias)
+        self.bias = new_biases
         return errors_out
 
 #MLP

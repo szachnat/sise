@@ -24,9 +24,14 @@ def test_layer_MLP():
     MLP.print(a)
     a.learn([1,2],[1,2])
     MLP.print(a)
+    a.learn([2,1],[2,1])
+    MLP.print(a)
     #print("b")
     #b=MLP([2,3,2])
     #MLP.print(b)
+    for i in range(100000):
+        a.learn([2,1],[2,1])
+    MLP.print(a)
 
 if __name__ == "__main__":
     main()
