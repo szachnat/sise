@@ -27,59 +27,68 @@ statFiles_f10_dyn = [join(mypath_f10_dyn, f) for f in listdir(mypath_f10_dyn) if
 
 class Reader:
     def load_learning_data(self)-> list[dict] | None:
-        #a=0
-        #b=0
         data=[]
         for file_f8 in statFiles_f8:
-            #print(file_f8)
-            #a+=1
             if not os.path.exists(file_f8) or field_names == None:
                 return None
-            
             with open(file_f8, mode='r', encoding= 'utf-8') as csv_file:
-                csv_reader=csv.DictReader(csv_file, fieldnames=field_names, delimiter=',', quoting=csv.QUOTE_NONE)
+                csv_reader=csv.reader(csv_file)
                 for row in csv_reader:
-                    data.append(row)
-                    #print(row)
-            #return data
+                    if(row[0]!='' and row[1]!=''):
+                        data.append(Reader.to_float(row))
+
         for file_f10 in statFiles_f10:
-            #print(file_f10)
-            #b+=1
             if not os.path.exists(file_f10) or field_names == None:
                 return None
             with open(file_f10, mode='r', encoding= 'utf-8') as csv_file:
-                csv_reader=csv.DictReader(csv_file, fieldnames=field_names, delimiter=',', quoting=csv.QUOTE_NONE)
+                csv_reader=csv.reader(csv_file)
                 for row in csv_reader:
-                    data.append(row)
-                    #print(row)
-        #print(a,b)
+                    if(row[0]!='' and row[1]!=''):
+                        data.append(Reader.to_float(row))
         return data
     
     def load_testing_data(self)-> list[dict] | None:
-        #a=0
-        #b=0
         data=[]
         for file_f8 in statFiles_f8_dyn:
-            #print(file_f8)
-            #a+=1
             if not os.path.exists(file_f8) or field_names == None:
                 return None
-            
             with open(file_f8, mode='r', encoding= 'utf-8') as csv_file:
-                csv_reader=csv.DictReader(csv_file, fieldnames=field_names, delimiter=',', quoting=csv.QUOTE_NONE)
+                csv_reader=csv.reader(csv_file)
                 for row in csv_reader:
-                    data.append(row)
-                    #print(row)
-            #return data
+                    if(row[0]!='' and row[1]!=''):
+                        data.append(Reader.to_float(row))
         for file_f10 in statFiles_f10_dyn:
-            #print(file_f10)
-            #b+=1
             if not os.path.exists(file_f10) or field_names == None:
                 return None
             with open(file_f10, mode='r', encoding= 'utf-8') as csv_file:
-                csv_reader=csv.DictReader(csv_file, fieldnames=field_names, delimiter=',', quoting=csv.QUOTE_NONE)
+                csv_reader=csv.reader(csv_file)
                 for row in csv_reader:
-                    data.append(row)
-                    #print(row)
-        #print(a,b)
+                    if(row[0]!='' and row[1]!=''):
+                        data.append(Reader.to_float(row))
         return data
+    def normalize(data):
+        # Obliczenie min i max dla całej macierzy
+        flat_matrix = [item for sublist in data for item in sublist]
+        data_min = min(flat_matrix)
+        data_max = max(flat_matrix)
+        
+        # Normalizacja macierzy
+        normalized_matrix = [[(x - data_min) / (data_max - data_min) for x in row] for row in data]
+        
+        return normalized_matrix, data_min, data_max
+
+    def denormalize(data, data_min, data_max):
+        # Denormalizacja macierzy
+        # Denormalizacja macierzy
+        denormalized_matrix = [[x * (data_max - data_min) + data_min for x in row] for row in data]
+        
+        return denormalized_matrix
+    
+    def to_float(row):
+        floats=[]
+        floats.append(float(row[0]))
+        floats.append(float(row[1]))
+        floats.append(float(row[2]))
+        floats.append(float(row[3]))
+        return floats
+    

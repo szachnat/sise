@@ -28,16 +28,17 @@ class Layer:
     def __init__(self, number_of_neurons, inputs, activation_function, derivative_of_activation_function):
         self.activation_function=activation_function
         self.derivative_of_activation_function=derivative_of_activation_function
-        self.weights=[[random() for i in range(inputs)] for j in range(number_of_neurons)]
+        self.weights=[[((random()-0.5)) for i in range(inputs)] for j in range(number_of_neurons)]
         self.bias=[0 for i in range(number_of_neurons)]
         self.number_of_inputs=int(inputs)
         self.gradients = [[0 for _ in range(inputs)] for _ in range(number_of_neurons)]
     ############################################################################################
-    def print(self):
+    def print_layer(self):
         print(self.weights)
         print(self.bias)
     ############################################################################################
-    def test(self,inputs):
+    def forward(self,inputs):
+        #print('forward')
         self.inputs=inputs
         sum = 0
         self.outputs=[]
@@ -58,6 +59,8 @@ class Layer:
         return self.outputs
     ############################################################################################
     def learn(self,errors,learn_speed, momentum, calculate_errors=True):
+        for j in range(len(self.weights)):
+            errors[j]=errors[j]*self.derivative_of_activation_function(self.outputs[j])
         # calculate error
         errors_out=[]
         if(calculate_errors):
@@ -69,7 +72,7 @@ class Layer:
                     weight=self.weights[j][i]
                     #print('weight=',weight)
                     #print('last output=',self.outputs[j])
-                    error_for_input+=error_to_propagate*weight*self.derivative_of_activation_function(self.outputs[j])
+                    error_for_input+=error_to_propagate*weight#*self.derivative_of_activation_function(self.outputs[j])
                 errors_out.append(error_for_input)
                 #print("error on input=",error_for_input)
         # calculate gradient
@@ -101,27 +104,32 @@ class MLP:
     ############################################################################################
     def __init__(self, layers) -> None:
         self.layers=[]
+        #self.layers.append(Layer(layers[0],2,identity_function,derivative_of_identity_function))
         self.layers.append(Layer(layers[0],2,sigmoidal_function,derivative_of_sigmoidal_function))
         for i in range(len(layers)-1):
-            self.layers.append(Layer(layers[i+1],layers[i],sigmoidal_function,derivative_of_sigmoidal_function)) 
-        self.layers.append(Layer(2,layers[-1],sigmoidal_function,derivative_of_sigmoidal_function))
+            self.layers.append(Layer(layers[i+1],layers[i],sigmoidal_function,derivative_of_sigmoidal_function))
+        self.layers.append(Layer(2,layers[-1],identity_function,derivative_of_identity_function))
+        #self.layers.append(Layer(2,layers[-1],sigmoidal_function,derivative_of_sigmoidal_function))
     ############################################################################################
     def print(self):
         for i in range(len(self.layers)):
             print(Layer.print(self.layers[i]))
     ############################################################################################
-    def test(self,inputs):
+    def forward(self,inputs):
+        #print(inputs)
         for layer in self.layers:
-            inputs = layer.test(inputs)
+            inputs = layer.forward(inputs)
+        #    print(inputs)
         return inputs
     ############################################################################################
     def learn(self,inputs, correct_outputs, learn_speed=0.05, momentum=0.9):
-        network_outputs=self.test(inputs)
+        network_outputs=self.forward(inputs)
         #print('wyjsciesieci=',network_outputs)
-        errors=[correct_outputs - network_outputs for correct_outputs, network_outputs in zip(correct_outputs, network_outputs)]
+        errors=[correct - network for correct, network in zip(correct_outputs, network_outputs)]
         #print("bledy=",errors)
         for layer in reversed(self.layers[1:]):
             errors=layer.learn(errors, learn_speed, momentum)
             #print("bledy=",errors)
         self.layers[0].learn(errors, learn_speed, momentum, False)
         #print("bledy=",errors)
+        return network_outputs
