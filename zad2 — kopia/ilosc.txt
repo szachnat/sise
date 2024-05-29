@@ -1,0 +1,50 @@
+Dobrze, podam Ci ogólne wytyczne dotyczące parametrów (momentum, learning rate) oraz architektury sieci dla przypadków z jedną, dwiema i trzema warstwami ukrytymi. Przyjmijmy, że będziemy eksperymentować z jedną warstwą ukrytą, dwiema warstwami ukrytymi oraz trzema warstwami ukrytymi w architekturze sieci.
+
+Dla jednej warstwy ukrytej:
+Architektura sieci:
+
+Warstwa wejściowa: Rozmiar zgodny z liczbą cech wejściowych danych.
+Warstwa ukryta: Około połowy do dwukrotności rozmiaru warstwy wejściowej (można eksperymentować, np. od 50 do 100 neuronów).
+Warstwa wyjściowa: Rozmiar zgodny z liczbą wyjściowych zmiennych lub klas.
+Parametry uczenia:
+
+Momentum: Około 0.9 (wartość standardowa, można eksperymentować w przedziale 0.8-0.95).
+Szybkość uczenia (learning rate): Około 0.01-0.1 (standardowa wartość, można dostosować w zależności od zbieżności modelu).
+Liczba epok:
+
+Rozpocznij od około 50 epok i monitoruj postęp. Możesz zatrzymać uczenie wcześniej, jeśli błąd na zbiorze walidacyjnym przestaje się zmniejszać.
+Dla dwóch warstw ukrytych:
+Architektura sieci:
+
+Warstwa wejściowa: Rozmiar zgodny z liczbą cech wejściowych danych.
+Pierwsza warstwa ukryta: Około połowy do dwukrotności rozmiaru warstwy wejściowej.
+Druga warstwa ukryta: Analogicznie, około połowy do dwukrotności rozmiaru poprzedniej warstwy ukrytej.
+Warstwa wyjściowa: Rozmiar zgodny z liczbą wyjściowych zmiennych lub klas.
+Parametry uczenia:
+
+Momentum: Podobnie, około 0.9.
+Szybkość uczenia: Możesz zacząć od 0.01-0.1, ale możliwe, że trzeba będzie dostosować, w zależności od złożoności problemu.
+Liczba epok:
+
+Rozpocznij od około 100 epok i monitoruj postęp. Przy większej liczbie warstw ukrytych model może wymagać więcej czasu na naukę.
+Dla trzech warstw ukrytych:
+Architektura sieci:
+
+Warstwa wejściowa: Rozmiar zgodny z liczbą cech wejściowych danych.
+Pierwsza warstwa ukryta: Około połowy do dwukrotności rozmiaru warstwy wejściowej.
+Druga warstwa ukryta: Podobnie, około połowy do dwukrotności rozmiaru poprzedniej warstwy ukrytej.
+Trzecia warstwa ukryta: Analogicznie, około połowy do dwukrotności rozmiaru poprzedniej warstwy ukrytej.
+Warstwa wyjściowa: Rozmiar zgodny z liczbą wyjściowych zmiennych lub klas.
+Parametry uczenia:
+
+Momentum: Podobnie, około 0.9.
+Szybkość uczenia: Początkowo około 0.01-0.1, ale może być konieczne dostosowanie w zależności od postępów w uczeniu.
+Liczba epok:
+
+Zaczynając od 100 epok, monitoruj wyniki na zbiorze walidacyjnym i dostosowuj liczbę epok w zależności od potrzeb.
+Ogólne wskazówki:
+Eksperymentuj i monitoruj: Każdy problem może wymagać dostosowania architektury sieci i parametrów uczenia. Ważne jest regularne monitorowanie błędu na zbiorze walidacyjnym i dostosowywanie parametrów na podstawie wyników.
+
+Zastosuj wczesne zatrzymywanie: Jeśli błąd na zbiorze walidacyjnym przestaje się zmniejszać lub zaczyna rosnąć, zatrzymaj proces uczenia, aby uniknąć przeuczenia.
+
+Eksperymentuj z różnymi kombinacjami: Wielkość warstw ukrytych i inne parametry mogą znacząco wpłynąć na wyniki. Eksperymentuj z różnymi kombinacjami, aby znaleźć optymalne rozwiązanie dla Twojego konkretnego problemu.

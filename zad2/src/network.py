@@ -1,135 +1,104 @@
-from random import random
-from math import exp
+import numpy as np
 
-#funkje aktywacji i ich pochodne
-#funkcja simigodalna
+from random import random
+from math import exp, sqrt
+
+# Activation functions and their derivatives
 def sigmoidal_function(x):
     return 1 / (1 + exp(-x))
 
-#pochodna funkcji simigodalnej
 def derivative_of_sigmoidal_function(y):
     return y * (1 - y)
 
-# identity function
 def identity_function(x):
     return x
 
-# derivative of identity function (argument is not important)
 def derivative_of_identity_function(y):
     return 1
 
-#exception
+def relu_function(x):
+    return np.maximum(0, x)  # Element-wise ReLU activation
+
+def derivative_of_relu_function(y):
+    return np.where(y > 0, 1, 0)  # Element-wise derivative of ReLU
+
 class ActivationFunctionNotFound(Exception):
     pass
 
-#warstwa MLP
-class Layer:
-    ############################################################################################
-    def __init__(self, number_of_neurons, inputs, activation_function, derivative_of_activation_function):
-        self.activation_function=activation_function
-        self.derivative_of_activation_function=derivative_of_activation_function
-        self.weights=[[((random()-0.5)) for i in range(inputs)] for j in range(number_of_neurons)]
-        self.bias=[0 for i in range(number_of_neurons)]
-        self.number_of_inputs=int(inputs)
-        self.gradients = [[0 for _ in range(inputs)] for _ in range(number_of_neurons)]
-    ############################################################################################
-    def print_layer(self):
-        print(self.weights)
-        print(self.bias)
-    ############################################################################################
-    def forward(self,inputs):
-        #print('forward')
-        self.inputs=inputs
-        sum = 0
-        self.outputs=[]
-        for j in range(len(self.weights)):
-            neuron=self.weights[j]
-            sum=0
-            for i in range(len(inputs)):
-                #print('neuron=',neuron[i])
-                #print('x=',inputs[i])
-                sum+=neuron[i]*inputs[i]
-                #print('suma=',sum)
-            #print('bias=',self.bias[j])
-            sum+=self.bias[j]
-            #print('suma=',sum)
-            self.outputs.append(self.activation_function(sum))
-            #print('aktyvation=',self.activation_function(sum))
-        #print('outputs=',self.outputs)
-        return self.outputs
-    ############################################################################################
-    def learn(self,errors,learn_speed, momentum, calculate_errors=True):
-        for j in range(len(self.weights)):
-            errors[j]=errors[j]*self.derivative_of_activation_function(self.outputs[j])
-        # calculate error
-        errors_out=[]
-        if(calculate_errors):
-            for i in range(self.number_of_inputs):
-                error_for_input=0
-                for j in range(len(self.weights)):
-                    error_to_propagate=errors[j]
-                    #print('error to propagate=',error_to_propagate)
-                    weight=self.weights[j][i]
-                    #print('weight=',weight)
-                    #print('last output=',self.outputs[j])
-                    error_for_input+=error_to_propagate*weight#*self.derivative_of_activation_function(self.outputs[j])
-                errors_out.append(error_for_input)
-                #print("error on input=",error_for_input)
-        # calculate gradient
-        gradients = []
-        for activation, error, old_gradient in zip(self.outputs, errors, self.gradients):
-            factor = -error * self.derivative_of_activation_function(activation)
-            gradients.append([factor * x + momentum * g for x, g in zip(self.inputs, old_gradient)])
-        self.gradients = gradients
-        # calculate new weights
-        new_weights = []
-        for weight, gradient in zip(self.weights, self.gradients):
-            new_weights.append([w - learn_speed * g for w, g in zip(weight, gradient)])
-            #new_weight=0
-            #for w, g in zip(weight, gradient):
-            #    new_weight+=w - learn_speed * g
-            #new_weights.append(new_weight)
-        self.weights = new_weights
-        #calculate new bias
-        new_biases = []
-        for bias, activation, error in zip(self.bias, self.outputs, errors):
-            factor = -error * self.derivative_of_activation_function(activation)
-            new_bias = bias - learn_speed * factor
-            new_biases.append(new_bias)
-        self.bias = new_biases
-        return errors_out
+# Xavier Initialization
+def xavier_initialization(inputs, outputs):
+    return np.random.randn(outputs, inputs) * sqrt(2 / (inputs + outputs))
 
-#MLP
+# Layer class for MLP
+class Layer:
+    def __init__(self, number_of_neurons, inputs, activation_function, derivative_of_activation_function):
+        self.activation_function = activation_function
+        self.derivative_of_activation_function = derivative_of_activation_function
+        #self.weights = xavier_initialization(inputs, number_of_neurons)
+        self.weights = [[(random() - 0.5) for _ in range(inputs)] for _ in range(number_of_neurons)]
+        self.bias = np.random.randn(number_of_neurons) * np.sqrt(2.0 / number_of_neurons)
+        self.number_of_inputs = int(inputs)
+        self.gradients = np.zeros((number_of_neurons, inputs))
+    
+    def forward(self, inputs):
+        self.inputs = inputs
+        z = np.dot(self.weights, inputs) + self.bias
+        self.outputs = self.activation_function(z)
+        return self.outputs
+    
+    def learn(self, errors, learn_speed, momentum, calculate_errors=True):
+        deltas = [error * self.derivative_of_activation_function(output) for error, output in zip(errors, self.outputs)]
+        
+        if self.activation_function == relu_function:
+            # Gradient clipping
+            max_gradient = 10.0  # Adjust as necessary
+            deltas = np.clip(deltas, -max_gradient, max_gradient)
+        
+        if calculate_errors:
+            errors_out = [sum(deltas[j] * self.weights[j][i] for j in range(len(self.weights))) for i in range(self.number_of_inputs)]
+        else:
+            errors_out = None
+        
+        for j in range(len(self.weights)):
+            for i in range(len(self.inputs)):
+                self.gradients[j][i] = learn_speed * deltas[j] * self.inputs[i] + momentum * self.gradients[j][i]
+                self.weights[j][i] = self.weights[j][i] - self.gradients[j][i]
+            self.bias[j] = self.bias[j] - learn_speed * deltas[j]
+
+        return errors_out
+# MLP class
 class MLP:
-    ############################################################################################
-    def __init__(self, layers) -> None:
-        self.layers=[]
-        #self.layers.append(Layer(layers[0],2,identity_function,derivative_of_identity_function))
-        self.layers.append(Layer(layers[0],2,sigmoidal_function,derivative_of_sigmoidal_function))
-        for i in range(len(layers)-1):
-            self.layers.append(Layer(layers[i+1],layers[i],sigmoidal_function,derivative_of_sigmoidal_function))
-        self.layers.append(Layer(2,layers[-1],identity_function,derivative_of_identity_function))
-        #self.layers.append(Layer(2,layers[-1],sigmoidal_function,derivative_of_sigmoidal_function))
-    ############################################################################################
+    def __init__(self, layers):
+        self.layers = []
+        #self.layers.append(Layer(layers[0], 2, sigmoidal_function, derivative_of_sigmoidal_function))
+        #for i in range(len(layers) - 1):
+        #    self.layers.append(Layer(layers[i + 1], layers[i], sigmoidal_function, derivative_of_sigmoidal_function))
+        self.layers.append(Layer(layers[0], 2, relu_function, derivative_of_relu_function))
+        for i in range(len(layers) - 1):
+            self.layers.append(Layer(layers[i + 1], layers[i], relu_function, derivative_of_relu_function))
+        self.layers.append(Layer(2, layers[-1], identity_function, derivative_of_identity_function))
+        #self.layers.append(Layer(2, layers[-1], sigmoidal_function, derivative_of_sigmoidal_function))
+    
     def print(self):
-        for i in range(len(self.layers)):
-            print(Layer.print(self.layers[i]))
-    ############################################################################################
-    def forward(self,inputs):
-        #print(inputs)
+        for layer in self.layers:
+            layer.print_layer()
+    
+    def forward(self, inputs):
         for layer in self.layers:
             inputs = layer.forward(inputs)
-        #    print(inputs)
         return inputs
-    ############################################################################################
-    def learn(self,inputs, correct_outputs, learn_speed=0.05, momentum=0.9):
-        network_outputs=self.forward(inputs)
-        #print('wyjsciesieci=',network_outputs)
-        errors=[correct - network for correct, network in zip(correct_outputs, network_outputs)]
-        #print("bledy=",errors)
+    
+    def learn(self, inputs, correct_outputs, learn_speed=0.05, momentum=0.9):
+        network_outputs = self.forward(inputs)
+        #print('Network outputs:', network_outputs)
+        
+        # Compute initial errors using the derivative of the cost function (MSE)
+        errors = [(network - correct) for network, correct in zip(network_outputs, correct_outputs)]
+        
         for layer in reversed(self.layers[1:]):
-            errors=layer.learn(errors, learn_speed, momentum)
-            #print("bledy=",errors)
+            errors = layer.learn(errors, learn_speed, momentum)
+        
         self.layers[0].learn(errors, learn_speed, momentum, False)
-        #print("bledy=",errors)
+        
         return network_outputs
+    
