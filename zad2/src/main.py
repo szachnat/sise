@@ -142,16 +142,24 @@ def main(layers,learn_speed,momentum,epok_min,epok_max) -> None:
 
 
 if __name__ == "__main__":
-    n=int(input('podaj ilosc warstw ukrytych:'))
-    layers=[]
-    for i in range(n):
-         layers.append(int(input('podaj ilosc neuronow na warstwie ukrytej:')))
+    #n=int(input('podaj ilosc warstw ukrytych:'))
+    #layers=[]
+    #for i in range(n):
+    #     layers.append(int(input('podaj ilosc neuronow na warstwie ukrytej:')))
+    #
+    #learn_speed=float(input('podaj szybkosc uczenia(0.05):'))
+    #momentum=float(input('podaj człon momentum(0.9):'))
+    #
+    #epok_min=int(input('podaj minimalna liczbe epok: '))
+    #epok_max=int(input('podaj maksymalną liczbe epok: '))
 
-    learn_speed=float(input('podaj szybkosc uczenia(0.05):'))
-    momentum=float(input('podaj człon momentum(0.9):'))
+    layers=[20]
 
-    epok_min=int(input('podaj minimalna liczbe epok: '))
-    epok_max=int(input('podaj maksymalną liczbe epok: '))
+    learn_speed=0.00001
+    momentum=0.9
+
+    epok_min=30
+    epok_max=150
 
     main(layers,learn_speed,momentum,epok_min,epok_max)
 
