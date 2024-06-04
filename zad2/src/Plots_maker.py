@@ -35,16 +35,18 @@ def read_four_lists_from_file(filename):
 
 def main():
     #dostosuj skalę wykresów 1 i 2 recznie -> w razie potrzeby odkomentuj linijki w kolejnym akapicie
-    #height=
+    height=4000000
     ###############################################################################################################################################
     MSE_learn_archive1, MSE_test_archive1, MSE_test_origin1=read_three_lists_from_file('wykresy1\\wykres_1_2.txt')
     MSE_learn_archive2, MSE_test_archive2, MSE_test_origin2=read_three_lists_from_file('wykresy2\\wykres_1_2.txt')
+    MSE_learn_archive3, MSE_test_archive3, MSE_test_origin3=read_three_lists_from_file('wykresy3\\wykres_1_2.txt')
 
     plt.figure(figsize=(7,6))
     plt.plot(MSE_learn_archive1)
     plt.plot(MSE_learn_archive2)
-    #plt.ylim(top=height)
-    plt.legend(['sieć o jednej warstwie ukrytej','sieć o dwuch warstwach ukrytych','sieć o trzech warstwach ukrytych'])
+    plt.plot(MSE_learn_archive3)
+    plt.ylim(top=height)
+    plt.legend(['sieć o jednej warstwie ukrytej','sieć o dwóch warstwach ukrytych','sieć o trzech warstwach ukrytych'])
     plt.title('MSE dla zbioru uczącego')
     plt.xlabel('epoki')
     plt.ylabel('wartośc błędu MSE')
@@ -54,9 +56,12 @@ def main():
     plt.figure(figsize=(7,6))
     plt.plot(MSE_test_archive1)
     plt.plot(MSE_test_archive2)
-    plt.axhline(y=MSE_test_origin1[0], color='r')
-    #plt.ylim(top=height)
-    plt.legend(['sieć o jednej warstwie ukrytej','sieć o dwuch warstwach ukrytych','sieć o trzech warstwach ukrytych','błąd pomiarów dynamicznych'])
+    plt.plot(MSE_test_archive3)
+    #plt.axhline(y=MSE_test_origin1[0], color='r')
+    #plt.axhline(y=MSE_test_origin2[0], color='r')
+    plt.axhline(y=MSE_test_origin3[0], color='r')
+    plt.ylim(top=height)
+    plt.legend(['sieć o jednej warstwie ukrytej','sieć o dwóch warstwach ukrytych','sieć o trzech warstwach ukrytych','błąd pomiarów dynamicznych'])
     plt.title('MSE dla zbioru testowego')
     plt.xlabel('epoki')
     plt.ylabel('wartośc błędu MSE')
@@ -65,13 +70,16 @@ def main():
     ###############################################################################################################################################
     testing_data_error_input1,output_data_error_input1,ecdf_values_test1,ecdf_values_output1=read_four_lists_from_file('wykresy1\\wykres_3.txt')
     testing_data_error_input2,output_data_error_input2,ecdf_values_test2,ecdf_values_output2=read_four_lists_from_file('wykresy2\\wykres_3.txt')
+    testing_data_error_input3,output_data_error_input3,ecdf_values_test3,ecdf_values_output3=read_four_lists_from_file('wykresy3\\wykres_3.txt')
 
     plt.figure(figsize=(7,6))
     plt.plot(testing_data_error_input1, ecdf_values_test1)
     plt.plot(output_data_error_input1, ecdf_values_output1)
     plt.plot(output_data_error_input2, ecdf_values_output2)
+    plt.plot(output_data_error_input3, ecdf_values_output3)
     plt.grid(True)
-    plt.legend(['dystrybuanta dla pomiarów dynamicznych','dystrybuanta dla sieci o jednej warstwie ukrytej','dystrybuanta dla sieci o dwuch warstwach ukrytych','dystrybuanta dla sieci o trzech warstwach ukrytych'])
+    #można obciąć na x
+    plt.legend(['dystrybuanta dla pomiarów dynamicznych','dystrybuanta dla sieci o jednej warstwie ukrytej','dystrybuanta dla sieci o dwóch warstwach ukrytych','dystrybuanta dla sieci o trzech warstwach ukrytych'])
     plt.title('dystrybuanta błędu')
     plt.xlabel('błąd (mm)')
     plt.ylabel('prawdopodobieństwo skumulowane')
@@ -81,6 +89,7 @@ def main():
     ###############################################################################################################################################
     testing_data1,last_output_list1=read_two_2d_lists_from_file('wykresy1\\wykres_4.txt')
     #testing_data1,last_output_list1=read_two_2d_lists_from_file('wykresy2\\wykres_4.txt')
+    #testing_data1,last_output_list1=read_two_2d_lists_from_file('wykresy3\\wykres_4.txt')
 
     plt.figure(figsize=(7,6))
     x_values = [item[0] for item in testing_data1]

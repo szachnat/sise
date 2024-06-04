@@ -44,6 +44,7 @@ def save_to_file4(list1, list2, list3, list4, filename):
 
 
 def main(layers,learn_speed,momentum,epok_min,epok_max) -> None:
+    identity=4
     reader = Reader()
     learning_data = reader.load_learning_data()
     testing_data = reader.load_testing_data()
@@ -128,6 +129,7 @@ def main(layers,learn_speed,momentum,epok_min,epok_max) -> None:
 
 
     MSE_test_origin=[]
+    suma=0
     for i in range(len(testing_data)):
          errors=[(testing_data[i][2]-testing_data[i][0])**2,(testing_data[i][3]-testing_data[i][1])**2]
          suma+=sum(errors)
@@ -139,7 +141,7 @@ def main(layers,learn_speed,momentum,epok_min,epok_max) -> None:
     plt.plot(MSE_test_archive)
     plt.axhline(y=MSE_test_origin[0], color ='r')
 
-    save_to_file3(MSE_learn_archive, MSE_test_archive, MSE_test_origin, f'wykresy{len(layers)}\\wykres_1_2.txt')
+    save_to_file3(MSE_learn_archive, MSE_test_archive, MSE_test_origin, f'wykresy{len(layers)}_{identity}\\wykres_1_2.txt')
 
 
     testing_data_error_input=[]
@@ -167,7 +169,7 @@ def main(layers,learn_speed,momentum,epok_min,epok_max) -> None:
     plt.plot(output_data_error_input, ecdf_values_output)
     plt.grid(True)
 
-    save_to_file4(testing_data_error_input,output_data_error_input,ecdf_values_test,ecdf_values_output,f'wykresy{len(layers)}\\wykres_3.txt')
+    save_to_file4(testing_data_error_input,output_data_error_input,ecdf_values_test,ecdf_values_output,f'wykresy{len(layers)}_{identity}\\wykres_3.txt')
 
 
     plt.subplot(1,3,3)
@@ -183,9 +185,10 @@ def main(layers,learn_speed,momentum,epok_min,epok_max) -> None:
     title=str(layers)+'-'+str(learn_speed_init)+'-'+str(momentum)
     plt.suptitle(title)
     plt.tight_layout()
+    plt.savefig(f'wykresy{len(layers)}_{identity}\\wykres.png')
     plt.show()
 
-    save_two_2d_lists_to_file(testing_data,last_output_list,f'wykresy{len(layers)}\\wykres_4.txt')
+    save_two_2d_lists_to_file(testing_data,last_output_list,f'wykresy{len(layers)}_{identity}\\wykres_4.txt')
 
 
 if __name__ == "__main__":
@@ -200,12 +203,12 @@ if __name__ == "__main__":
     #epok_min=int(input('podaj minimalna liczbe epok: '))
     #epok_max=int(input('podaj maksymalną liczbe epok: '))
 
-    layers=[10,5]
+    layers=[8,6,4]
 
     learn_speed=0.000001
     momentum=0.9
 
-    epok_min=40
+    epok_min=43
     epok_max=150
 
     main(layers,learn_speed,momentum,epok_min,epok_max)
