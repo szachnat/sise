@@ -1,0 +1,38 @@
+wielowarstwowy perceptron
+
+wejście -> dane zaszumione
+wyjście -> dane z zredukowanym błędem
+
+UWB -> system lokalizacji w budynkach
+	śledzone obiekty wysyłają sygnały, czujniki odbierają (z opóźnieniem(ułamki sekund))(natęrzenie maleje z odległością)
+	system liczy gdzie jest obiekt na podstawie natęrzenia i opóźnienia i innych
+
+MECHANIZM FILTRACJI
+
+nasze dane
+	robot stał na siatce na podłodze i pomiary według UWB (statyczne) i według siatki
+	robot poruszał sie po siatce (dynamiczne)
+
+w plikach statycznych
+	wiersz -> pomiar
+	kol1-> x UWB
+	kol2-> y UWB
+	kol3-> x na siatce
+	kol4-> y na siatce
+
+w plikach dynamicznych
+	z->zgodnie z zegarem
+	p->przeciwanie do zegaru
+	kolumny tak samo
+	wiersze pozycja w kolejnych odstępach czasu
+
+pomiary statyczne -> faza kalibracji systemu redukcji szumów UCZENIE(z obu sal jednocześnie)
+pomiary dynamiczne -> TESTOWANIE(z obu sal jednocześnie)
+
+proces nauki -> proces stochastyczny -> zawiera czynniki losowe
+zwykle losujemy wartości wag 
+wzorce w losowej kolejności
+Może sieć nauczyć się fajnie albo nie (przez te losowe) wiec dla każdego wariantu po 3 procesy nauki
+
+SPRAWKO
+cztery wykresy -> trzy wykresy(każda z ,,zwycięskich" sieci)(1i2 błąd średniokwadratowy)(3 ((_/⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺⎺)) dystrybuanta błędów(sortujemy wartości odległości euklidesowych(?)(ostatnia wartość jest 1)(40% pomiarów miało błąd niewiekszy błąd niż 230mm)(czyli jak wykres w lewo to znaczy że poprawa i działa)), czwarty TYLKO Z JEDNEJ najlepszej(prognozy(redukcja chmury punktów))

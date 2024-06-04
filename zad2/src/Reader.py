@@ -92,3 +92,21 @@ class Reader:
         floats.append(float(row[3]))
         return floats
     
+    def save_to_file(list1, list2, list3, filename):
+        with open(filename, 'w') as file:
+            for item in list1:
+                file.write(f"{item}\n")
+            file.write("\n")  # Dodajemy pustą linię jako separator
+            for item in list2:
+                file.write(f"{item}\n")
+            file.write("\n")  # Dodajemy pustą linię jako separator
+            for item in list3:
+                file.write(f"{item}\n")
+                
+    def read_three_lists_from_file(filename):
+        with open(filename, 'r') as file:
+            content = file.read().strip().split('\n\n')  # Dzielimy na trzy części według pustych linii
+            list1 = [float(item) for item in content[0].split('\n')]
+            list2 = [float(item) for item in content[1].split('\n')]
+            list3 = [float(item) for item in content[2].split('\n')]
+        return list1, list2, list3

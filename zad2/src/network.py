@@ -22,6 +22,18 @@ def relu_function(x):
 def derivative_of_relu_function(y):
     return np.where(y > 0, 1, 0)  # Element-wise derivative of ReLU
 
+def tanh(x):
+    return np.tanh(x)
+
+def derivative_of_tanh(y):
+    return 1 - y**2
+
+def leaky_relu_function(x, alpha=0.01):
+    return np.where(x >= 0, x, alpha * x)
+
+def derivative_of_leaky_relu_function(y, alpha=0.01):
+    return np.where(y >= 0, 1, alpha)
+
 class ActivationFunctionNotFound(Exception):
     pass
 
@@ -51,7 +63,7 @@ class Layer:
         
         if self.activation_function == relu_function:
             # Gradient clipping
-            max_gradient = 10.0  # Adjust as necessary
+            max_gradient = 1.0  # Adjust as necessary
             deltas = np.clip(deltas, -max_gradient, max_gradient)
         
         if calculate_errors:
@@ -70,12 +82,23 @@ class Layer:
 class MLP:
     def __init__(self, layers):
         self.layers = []
+
         #self.layers.append(Layer(layers[0], 2, sigmoidal_function, derivative_of_sigmoidal_function))
         #for i in range(len(layers) - 1):
         #    self.layers.append(Layer(layers[i + 1], layers[i], sigmoidal_function, derivative_of_sigmoidal_function))
+
+        #self.layers.append(Layer(layers[0], 2, tanh, derivative_of_tanh))
+        #for i in range(len(layers) - 1):
+        #    self.layers.append(Layer(layers[i + 1], layers[i], tanh, derivative_of_tanh))
+
+        #self.layers.append(Layer(layers[0], 2, leaky_relu_function, derivative_of_leaky_relu_function))
+        #for i in range(len(layers) - 1):
+        #    self.layers.append(Layer(layers[i + 1], layers[i], leaky_relu_function, derivative_of_leaky_relu_function))
+
         self.layers.append(Layer(layers[0], 2, relu_function, derivative_of_relu_function))
         for i in range(len(layers) - 1):
             self.layers.append(Layer(layers[i + 1], layers[i], relu_function, derivative_of_relu_function))
+
         self.layers.append(Layer(2, layers[-1], identity_function, derivative_of_identity_function))
         #self.layers.append(Layer(2, layers[-1], sigmoidal_function, derivative_of_sigmoidal_function))
     

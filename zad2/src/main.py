@@ -7,6 +7,41 @@ from scipy.stats import norm
 from Reader import Reader
 from network import Layer,sigmoidal_function, derivative_of_sigmoidal_function,identity_function,derivative_of_identity_function,MLP
 
+def save_two_2d_lists_to_file(list1, list2, filename):
+        with open(filename, 'w') as file:
+            for sublist in list1:
+                file.write(' '.join(map(str, sublist)) + "\n")
+            file.write("\n")  # Dodajemy pustą linię jako separator
+            for sublist in list2:
+                file.write(' '.join(map(str, sublist)) + "\n")
+
+def save_to_file3(list1, list2, list3, filename):
+        with open(filename, 'w') as file:
+            for item in list1:
+                file.write(f"{item}\n")
+            file.write("\n")  # Dodajemy pustą linię jako separator
+            for item in list2:
+                file.write(f"{item}\n")
+            file.write("\n")  # Dodajemy pustą linię jako separator
+            for item in list3:
+                file.write(f"{item}\n")
+
+def save_to_file4(list1, list2, list3, list4, filename):
+        with open(filename, 'w') as file:
+            for item in list1:
+                file.write(f"{item}\n")
+            file.write("\n")  # Dodajemy pustą linię jako separator
+            for item in list2:
+                file.write(f"{item}\n")
+            file.write("\n")  # Dodajemy pustą linię jako separator
+            for item in list3:
+                file.write(f"{item}\n")
+            file.write("\n")  # Dodajemy pustą linię jako separator
+            for item in list4:
+                file.write(f"{item}\n")
+                
+
+
 
 def main(layers,learn_speed,momentum,epok_min,epok_max) -> None:
     reader = Reader()
@@ -42,7 +77,7 @@ def main(layers,learn_speed,momentum,epok_min,epok_max) -> None:
     while warunek:
             
             random.shuffle(learning_data_shuffled)
-            print(licznik)
+            print(licznik,layers,learn_speed)
 
             print('0', end='')
             for j in range(len(learning_data_shuffled)):
@@ -76,6 +111,9 @@ def main(layers,learn_speed,momentum,epok_min,epok_max) -> None:
             MSE_t=suma/(len(testing_normalize)*2)
             print(MSE_t)
 
+            #if(licznik<10 and licznik%2==0):
+            #    learn_speed= learn_speed*0.1
+
 
             if ((licznik>epok_min and MSE_t >= MSE_test_archive[-1]) or licznik >= epok_max):
                 print('if ',licznik,' ',MSE_t,'>',MSE_test_archive[-1])
@@ -89,13 +127,19 @@ def main(layers,learn_speed,momentum,epok_min,epok_max) -> None:
             licznik+=1
 
 
+    MSE_test_origin=[]
+    for i in range(len(testing_data)):
+         errors=[(testing_data[i][2]-testing_data[i][0])**2,(testing_data[i][3]-testing_data[i][1])**2]
+         suma+=sum(errors)
+    MSE_test_origin.append(suma/(len(testing_data)*2))
             
     plt.subplots(nrows=1, ncols=3, figsize=(18, 6))
     plt.subplot(1,3,1)
     plt.plot(MSE_learn_archive)
     plt.plot(MSE_test_archive)
+    plt.axhline(y=MSE_test_origin[0], color ='r')
 
-
+    save_to_file3(MSE_learn_archive, MSE_test_archive, MSE_test_origin, f'wykresy{len(layers)}\\wykres_1_2.txt')
 
 
     testing_data_error_input=[]
@@ -123,6 +167,7 @@ def main(layers,learn_speed,momentum,epok_min,epok_max) -> None:
     plt.plot(output_data_error_input, ecdf_values_output)
     plt.grid(True)
 
+    save_to_file4(testing_data_error_input,output_data_error_input,ecdf_values_test,ecdf_values_output,f'wykresy{len(layers)}\\wykres_3.txt')
 
 
     plt.subplot(1,3,3)
@@ -140,6 +185,8 @@ def main(layers,learn_speed,momentum,epok_min,epok_max) -> None:
     plt.tight_layout()
     plt.show()
 
+    save_two_2d_lists_to_file(testing_data,last_output_list,f'wykresy{len(layers)}\\wykres_4.txt')
+
 
 if __name__ == "__main__":
     #n=int(input('podaj ilosc warstw ukrytych:'))
@@ -153,12 +200,12 @@ if __name__ == "__main__":
     #epok_min=int(input('podaj minimalna liczbe epok: '))
     #epok_max=int(input('podaj maksymalną liczbe epok: '))
 
-    layers=[20]
+    layers=[10,5]
 
-    learn_speed=0.00001
+    learn_speed=0.000001
     momentum=0.9
 
-    epok_min=30
+    epok_min=40
     epok_max=150
 
     main(layers,learn_speed,momentum,epok_min,epok_max)
