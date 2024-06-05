@@ -79,6 +79,7 @@ def main():
     plt.plot(output_data_error_input3, ecdf_values_output3)
     plt.grid(True)
     #można obciąć na x
+    #plt.xscale('log')
     plt.legend(['dystrybuanta dla pomiarów dynamicznych','dystrybuanta dla sieci o jednej warstwie ukrytej','dystrybuanta dla sieci o dwóch warstwach ukrytych','dystrybuanta dla sieci o trzech warstwach ukrytych'])
     plt.title('dystrybuanta błędu')
     plt.xlabel('błąd (mm)')
