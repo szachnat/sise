@@ -100,9 +100,9 @@ python main.py
 
 ## 📌 **AUTORZY**
 
--Anna Chojnacka
-
 -Natalia Lewosińska
+
+-Anna Chojnacka
 
 ## 📄 **LICENCJA**
 
