@@ -62,7 +62,7 @@ Testowano różne warianty sieci:
 - momentum: **0.9**  
 
 **Warunek stopu:**
-- maksymalna liczba epok **lub**  
+- maksymalna liczba epok lub  
 - brak poprawy błędu MSE  
 
 ### 📊 **EWALUACJA**
