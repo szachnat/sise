@@ -106,4 +106,4 @@ python main.py
 
 ## 📄 **LICENCJA**
 
-MIT Licence
+[MIT Licence](LICENSE)
